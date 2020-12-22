@@ -1,0 +1,8 @@
+//
+// Created by muzhou on 2020/12/18.
+//
+
+#ifndef KECHENGSHEJI_STATUSMODEL_H
+#define KECHENGSHEJI_STATUSMODEL_H
+
+#endif //KECHENGSHEJI_STATUSMODEL_H

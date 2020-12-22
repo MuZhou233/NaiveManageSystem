@@ -1,0 +1,6 @@
+# cmake_minimum_required(VERSION <specify CMake version here>)
+project(kechengsheji C)
+
+set(CMAKE_C_STANDARD 11)
+
+add_executable(kechengsheji main.c Model/UserModel.h Model/StatusModel.h Model/DataModel.h Model/MetaModel.h Controller/FileController.h Controller/UserController.h Controller/UserController.c Model/DataModel.c)
