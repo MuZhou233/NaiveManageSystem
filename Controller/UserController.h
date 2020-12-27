@@ -9,13 +9,18 @@
 #include "../Model/UserModel.h"
 #include "../Model/StatusModel.h"
 
-UserPtr newUser(const char, const wchar_t*, const wchar_t*);
+//UserPtr newUser(const char, const wchar_t*, const wchar_t*);
 
 StatusPtr initUserController();
-UserPtr getRaw();
-StatusPtr addUser();
-StatusPtr deleteUser();
-StatusPtr searchUser();
-StatusPtr editUser();
+
+StatusPtr login(wchar_t[16], wchar_t[16]);
+bool logged();
+StatusPtr logout();
+
+StatusPtr addUser(wchar_t[16], wchar_t[16]);
+StatusPtr removeUser(u16);
+StatusPtr searchUser(wchar_t*);
+StatusPtr editUser(wchar_t*, wchar_t*);
+UserPtr getUserRaw();
 
 #endif //KECHENGSHEJI_USERCONTROLLER_H

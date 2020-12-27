@@ -5,18 +5,23 @@
 #ifndef KECHENGSHEJI_STATUSMODEL_H
 #define KECHENGSHEJI_STATUSMODEL_H
 
-typedef union _StatusModel{
+#include <wchar.h>
+
+typedef enum {
+    SUCCESS = 0,
+    FAILED,
+    NULLPTR,
+    UNKNOWN
+} STAT;
+
+typedef union {
     struct {
-        enum stat {
-            SUCCESS = 1,
-            FAILED,
-            UNDEFINED,
-            UNKOWNERROR
-        };
+        STAT stat;
+        wchar_t* msg;
     };
     char raw[0];
 } StatusModel, *StatusPtr;
 
-StatusPtr newStatus(stat);
+StatusPtr newStatus(STAT, wchar_t*);
 
 #endif //KECHENGSHEJI_STATUSMODEL_H

@@ -5,14 +5,13 @@
 #ifndef KECHENGSHEJI_ITEMMODEL_H
 #define KECHENGSHEJI_ITEMMODEL_H
 
-#include<wchar.h>
+#include <wchar.h>
+#include "../Base.h"
 
-typedef union _ItemModel{
+typedef union {
     struct {
-        char Iid;
-        wchar_t name[16];
-        int number;
-        int price;
+        u32 Iid;
+        wchar_t metas[6][16];
     };
     char raw[0];
 } ItemModel, *ItemPtr;

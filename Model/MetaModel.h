@@ -5,14 +5,22 @@
 #ifndef KECHENGSHEJI_METAMODEL_H
 #define KECHENGSHEJI_METAMODEL_H
 
-#define MaxUserNumber 1<<(4*sizeof(char))
-#define MaxItemNumber 1<<(4*sizeof(int))
+#include "../Base.h"
+#include <wchar.h>
 
-typedef union _MetaModel{
+typedef union {
     struct {
-        char UserNumber;
-        int ItemNumber;
-    }
+        u8 UserNumber;
+        u32 ItemNumber;
+        struct ItemMeta {
+            wchar_t* p1;
+            wchar_t* p2;
+            wchar_t* p3;
+            wchar_t* p4;
+            wchar_t* p5;
+            wchar_t* p6;
+        } ItemMeta ;
+    };
     char raw[0];
 } MetaModel, *MetaPtr;
 

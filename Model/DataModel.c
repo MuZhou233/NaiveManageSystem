@@ -18,47 +18,39 @@ LinkList* Init_LinkList()
     return list;
 }
 
-void Insert_LinkList(LinkList* list, int pos, void * data)    // 指定位置插入
+StatusPtr Insert_LinkList(LinkList* list, int pos, void * data)    // 指定位置插入
 {
-    if (list == NULL)
-        return;
-    if (data == NULL)
-        return;
+    if (list == NULL || data == NULL)
+        return newStatus(NULLPTR, L"");
 
     if (pos<0 || pos > list->size)       // 不合法位置，插入到尾部
-    {
         pos = list->size;
-    }
 
-    LinkListNode* newnode = (LinkListNode*)malloc(sizeof(LinkListNode));
-    newnode->data = data;
-    newnode->next = NULL;
+    LinkListNode* newNode = (LinkListNode*)malloc(sizeof(LinkListNode));
+    newNode->data = data;
+    newNode->next = NULL;
 
     LinkListNode* pCurrent = list->head;
     for (int i = 0; i < pos; i++)
-    {
         pCurrent = pCurrent->next;
-    }
 
-    newnode->next = pCurrent->next;
-    pCurrent->next = newnode;
+    newNode->next = pCurrent->next;
+    pCurrent->next = newNode;
 
     list->size++;
-
+    return newStatus(SUCCESS, L"");
 }
 
-void RemoveByPos_LinkList(LinkList* list, int pos)
+StatusPtr Remove_LinkList(LinkList* list, callback_LinkList func, void* params)
 {
     if (list == NULL)
-        return;
-    if (pos<0 || pos >= list->size)
-    {
-        return;
-    }
+        return newStatus(NULLPTR, L"");
 
     LinkListNode* pCurrent = list->head;
-    for (int i = 0; i < pos; i++)
+    while (pCurrent)
     {
+        if (func(pCurrent->next->data, params))
+            break;
         pCurrent = pCurrent->next;
     }
 
@@ -66,6 +58,7 @@ void RemoveByPos_LinkList(LinkList* list, int pos)
     pCurrent->next = pDel->next;
     free(pDel);
     list->size--;
+    return newStatus(SUCCESS, L"");
 }
 
 int Size_LinkList(LinkList* list)
@@ -76,25 +69,20 @@ int Size_LinkList(LinkList* list)
     return list->size;
 }
 
-int Find_LinkList(LinkList *list, void* data)
+void* Find_LinkList(LinkList *list, callback_LinkList func, void* params)
 {
     if (list == NULL)
-        return -1;
-
-    if (data == NULL)
-        return -1;
+        return newStatus(NULLPTR, L"");
 
     // 遍历查找
-    LinkListNode* pCurrent = list->head->next;
-    int i = 0;
+    LinkListNode* pCurrent = list->head;
     while (pCurrent)
     {
-        if (pCurrent->data == data)
-            break;
-        i++;
+        if (func(pCurrent->data, params))
+            return pCurrent->data;
         pCurrent = pCurrent->next;
     }
-    return i;
+    return NULL;
 }
 
 void* Front_LinkList(LinkList* list)
@@ -104,17 +92,18 @@ void* Front_LinkList(LinkList* list)
     return list->head->next->data;
 }
 
-void FreeSpace_LinkList(LinkList* list)
+StatusPtr FreeSpace_LinkList(LinkList* list)
 {
-    if (list == NULL)
-        return;
-    LinkListNode* pCurrent = list->head;
-    while (pCurrent)
-    {
-        LinkListNode* pNext = pCurrent->next;       // 缓存下一个结点
+    if(list->head != NULL){
+        LinkListNode* pCurrent = list->head;
+        while (pCurrent->next != NULL)
+        {
+            LinkListNode* pNext = pCurrent->next;       // 缓存下一个结点
+            free(pCurrent);
+            pCurrent = pNext;
+        }
         free(pCurrent);
-        pCurrent = pNext;
     }
-    list->size = 0;
     free(list);
+    return newStatus(SUCCESS, L"");
 }

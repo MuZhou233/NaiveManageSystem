@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include<wchar.h>
+#include "Model/StatusModel.h"
 #include "Controller/UserController.h"
 
 int main() {
-    printf("Hello, World!\n%lu\n%lu",sizeof(wchar_t), sizeof(char));
-    UserPtr a = newUser(1, L"233", L"233");
-    printf("%ls\n", a->Username);
-    for (int i=0;i<sizeof(UserModel);i++)
-    printf("%x", a->raw[i]);
+    StatusPtr a = newStatus(SUCCESS, L"haha");
+    wprintf(L"%ls %d", a->msg, wcslen(a->msg));
     return 0;
 }

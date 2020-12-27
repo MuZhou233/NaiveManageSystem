@@ -6,8 +6,7 @@
 #define KECHENGSHEJI_FILECONTROLLER_H
 
 #include "../Model/MetaModel.h"
-#include "../Model/DataModel.h"
-#include "../Model/StatusModel.h"
+#include "./UserController.h"
 
 StatusPtr readDataFile(MetaPtr);
 StatusPtr writeDataFile(MetaPtr);
