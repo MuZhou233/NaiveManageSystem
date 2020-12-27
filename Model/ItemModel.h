@@ -11,7 +11,7 @@
 typedef union {
     struct {
         u32 Iid;
-        wchar_t metas[6][16];
+        wchar_t data[6][16];
     };
     char raw[0];
 } ItemModel, *ItemPtr;

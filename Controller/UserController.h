@@ -18,9 +18,9 @@ bool logged();
 StatusPtr logout();
 
 StatusPtr addUser(wchar_t[16], wchar_t[16]);
-StatusPtr removeUser(u16);
-StatusPtr searchUser(wchar_t*);
+StatusPtr removeUser();
+UserPtr searchUser(wchar_t*);
 StatusPtr editUser(wchar_t*, wchar_t*);
-UserPtr getUserRaw();
+LinkListPtr getUserRaw();
 
 #endif //KECHENGSHEJI_USERCONTROLLER_H

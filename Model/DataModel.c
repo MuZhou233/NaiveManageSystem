@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-LinkList* Init_LinkList()
+LinkList* LinkList_Init()
 {
     LinkList* list = (LinkList*)malloc(sizeof(LinkList));
     list->size = 0;
@@ -18,7 +18,7 @@ LinkList* Init_LinkList()
     return list;
 }
 
-StatusPtr Insert_LinkList(LinkList* list, int pos, void * data)    // 指定位置插入
+StatusPtr LinkList_Insert(LinkList* list, int pos, void * data)    // 指定位置插入
 {
     if (list == NULL || data == NULL)
         return newStatus(NULLPTR, L"");
@@ -41,7 +41,7 @@ StatusPtr Insert_LinkList(LinkList* list, int pos, void * data)    // 指定位�
     return newStatus(SUCCESS, L"");
 }
 
-StatusPtr Remove_LinkList(LinkList* list, callback_LinkList func, void* params)
+StatusPtr LinkList_Remove(LinkList* list, LinkList_Callback func, void* params)
 {
     if (list == NULL)
         return newStatus(NULLPTR, L"");
@@ -61,7 +61,7 @@ StatusPtr Remove_LinkList(LinkList* list, callback_LinkList func, void* params)
     return newStatus(SUCCESS, L"");
 }
 
-int Size_LinkList(LinkList* list)
+int LinkList_Size(LinkList* list)
 {
     if (list == NULL)
         return -1;
@@ -69,7 +69,7 @@ int Size_LinkList(LinkList* list)
     return list->size;
 }
 
-void* Find_LinkList(LinkList *list, callback_LinkList func, void* params)
+void* LinkList_Find(LinkList *list, LinkList_Callback func, void* params)
 {
     if (list == NULL)
         return newStatus(NULLPTR, L"");
@@ -85,14 +85,22 @@ void* Find_LinkList(LinkList *list, callback_LinkList func, void* params)
     return NULL;
 }
 
-void* Front_LinkList(LinkList* list)
-{
-    if (list == NULL)
-        return NULL;
-    return list->head->next->data;
+void* LinkList_FindNext(LinkListNode *pCurrent, LinkList_Callback func, void* params){
+    if (pCurrent == NULL)
+        return newStatus(NULLPTR, L"");
+
+    pCurrent = pCurrent->next;
+    // 遍历查找
+    while (pCurrent)
+    {
+        if (func(pCurrent->data, params))
+            return pCurrent->data;
+        pCurrent = pCurrent->next;
+    }
+    return NULL;
 }
 
-StatusPtr FreeSpace_LinkList(LinkList* list)
+StatusPtr LinkList_Free(LinkList* list)
 {
     if(list->head != NULL){
         LinkListNode* pCurrent = list->head;

@@ -12,15 +12,15 @@ UserModel* newUser(u8 uid, const wchar_t* username, const wchar_t* password){
     UserModel* Obj = NULL;
     if(wcslen(username) > 16 || wcslen(password) > 16) return Obj;
     Obj = (UserModel*)malloc(sizeof(UserModel));
-    Obj->Uid = uid;
-    wcscpy(Obj->Username, username);
-    wcscpy(Obj->Password, password);
+    Obj->uid = uid;
+    wcscpy(Obj->username, username);
+    wcscpy(Obj->password, password);
     return Obj;
 }
 
-StatusPtr initController() {
+StatusPtr initUserController() {
     loggedUser = NULL;
-    Users = Init_LinkList();
+    Users = LinkList_Init();
     return newStatus(SUCCESS, L"");
 }
 
@@ -29,15 +29,17 @@ bool login_callback(void* _data, void* _username){
         return false;
     UserPtr data = _data;
     wchar_t* username = _username;
-    return wcscmp(data->Username, username) == 0;
+    return wcscmp(data->username, username) == 0;
 }
 
 StatusPtr login(wchar_t username[16], wchar_t password[16]){
     if(username == NULL || password == NULL)
         return newStatus(NULLPTR, L"");
-    UserPtr res = Find_LinkList(Users, login_callback, username);
+    UserPtr res = LinkList_Find(Users, login_callback, username);
     if(res == NULL)
         return newStatus(FAILED, L"unknown user");
+    if(wcscmp(res->password, password) != 0)
+        return newStatus(FAILED, L"wrong password");
     loggedUser = res;
     return newStatus(SUCCESS, L"");
 }
@@ -54,8 +56,10 @@ StatusPtr logout(){
 StatusPtr addUser(wchar_t username[16], wchar_t password[16]){
     if(logged())
         return newStatus(FAILED, L"user logged");
-    u32 userNumber = Size_LinkList(Users);
-    return Insert_LinkList(Users, userNumber, newUser(userNumber, username, password));
+    if(searchUser(username) != NULL)
+        return newStatus(FAILED, L"user exist");
+    u32 userNumber = LinkList_Size(Users);
+    return LinkList_Insert(Users, userNumber, newUser(userNumber, username, password));
 }
 
 bool removeUser_callback(void* _data, void* _uid){
@@ -63,13 +67,13 @@ bool removeUser_callback(void* _data, void* _uid){
         return false;
     UserPtr data = _data;
     u16* uid = _uid;
-    return data->Uid == *uid;
+    return data->uid == *uid;
 }
 
-StatusPtr removeUser(u16 uid){
-    if(loggedUser == NULL || loggedUser->Uid != uid)
+StatusPtr removeUser(){
+    if(loggedUser == NULL)
         return newStatus(NULLPTR, L"");
-    return Remove_LinkList(Users, removeUser_callback, &uid);
+    return LinkList_Remove(Users, removeUser_callback, &loggedUser->uid);
 }
 
 bool searchUser_callback(void* _data, void* _username){
@@ -77,23 +81,23 @@ bool searchUser_callback(void* _data, void* _username){
         return false;
     UserPtr data = _data;
     wchar_t* username = _username;
-    return wcscmp(data->Username, username);
+    return wcscmp(data->username, username);
 }
 
-StatusPtr searchUser(wchar_t* username){
+UserPtr searchUser(wchar_t* username){
     if(username == NULL)
-        return newStatus(NULLPTR, L"");
-    return Find_LinkList(Users, searchUser_callback, username);
+        return NULL;
+    return LinkList_Find(Users, searchUser_callback, username);
 }
 
 StatusPtr editUser(wchar_t* username, wchar_t* password){
     if(username == NULL || password == NULL)
         return newStatus(NULLPTR, L"");
-    wcscpy(loggedUser->Username, username);
-    wcscpy(loggedUser->Password, password);
+    wcscpy(loggedUser->username, username);
+    wcscpy(loggedUser->password, password);
     return newStatus(SUCCESS, L"");
 }
 
-UserPtr getUserRaw(){
-    return Front_LinkList(Users);
+LinkListPtr getUserRaw(){
+    return Users;
 }

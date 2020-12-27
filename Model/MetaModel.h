@@ -10,9 +10,9 @@
 
 typedef union {
     struct {
-        u8 UserNumber;
-        u32 ItemNumber;
-        struct ItemMeta {
+        u8 userNumber;
+        u32 itemNumber;
+        struct _ItemMeta {
             wchar_t* p1;
             wchar_t* p2;
             wchar_t* p3;

@@ -1,10 +1,11 @@
-#include <stdio.h>
-#include<wchar.h>
-#include "Model/StatusModel.h"
-#include "Controller/UserController.h"
+#include <stdlib.h>
+#include "Controller/FileController.h"
 
 int main() {
-    StatusPtr a = newStatus(SUCCESS, L"haha");
-    wprintf(L"%ls %d", a->msg, wcslen(a->msg));
+    initItemController();
+    initUserController();
+    MetaPtr meta = malloc(sizeof(MetaModel));
+    meta->userNumber = 1;
+    writeDataFile(meta);
     return 0;
 }

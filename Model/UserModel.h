@@ -10,9 +10,9 @@
 
 typedef union _UserModel{
     struct {
-        u16 Uid;
-        wchar_t Username[16];
-        wchar_t Password[16];
+        u16 uid;
+        wchar_t username[16];
+        wchar_t password[16];
     };
     char raw[0];
 } UserModel, *UserPtr;

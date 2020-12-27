@@ -9,7 +9,7 @@
 #include "./StatusModel.h"
 #include <stdbool.h>
 
-typedef struct LinkListNode LinkListNode;
+typedef struct LinkListNode LinkListNode, *LinkListNodePtr;
 
 struct LinkListNode {
     void* data;
@@ -21,14 +21,14 @@ typedef struct {
     u32 size;
 } LinkList, *LinkListPtr;
 
-typedef bool(*callback_LinkList)(void*, void*);
+typedef bool(*LinkList_Callback)(void*, void*);
 
-LinkList* Init_LinkList();
-StatusPtr Insert_LinkList(LinkList* list, int pos, void * data);     // 指定位置插入
-StatusPtr Remove_LinkList(LinkList* list, callback_LinkList, void* params);             // 删除指定位置的值
-void* Find_LinkList(LinkList *list, callback_LinkList, void* params);
-int Size_LinkList(LinkList* list);                              // 获取链表的长度
-void* Front_LinkList(LinkList* list);                           // 返回第一个节点
-StatusPtr FreeSpace_LinkList(LinkList* list);                        // 释放链表的内存
+LinkList* LinkList_Init();
+StatusPtr LinkList_Insert(LinkList* list, int pos, void * data);     // 指定位置插入
+StatusPtr LinkList_Remove(LinkList* list, LinkList_Callback, void* params);             // 删除指定位置的值
+void* LinkList_Find(LinkList *list, LinkList_Callback, void* params);
+void* LinkList_FindNext(LinkListNode *list, LinkList_Callback, void* params);
+int LinkList_Size(LinkList* list);                              // 获取链表的长度
+StatusPtr LinkList_Free(LinkList* list);                        // 释放链表的内存
 
 #endif //KECHENGSHEJI_DATAMODEL_H

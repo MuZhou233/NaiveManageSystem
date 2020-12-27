@@ -7,6 +7,7 @@
 
 #include "../Model/MetaModel.h"
 #include "./UserController.h"
+#include "./ItemController.h"
 
 StatusPtr readDataFile(MetaPtr);
 StatusPtr writeDataFile(MetaPtr);
