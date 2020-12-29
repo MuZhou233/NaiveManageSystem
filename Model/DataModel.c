@@ -79,7 +79,7 @@ void* LinkList_Find(LinkList *list, LinkList_Callback func, void* params)
     while (pCurrent)
     {
         if (func(pCurrent->data, params))
-            return pCurrent->data;
+            return pCurrent;
         pCurrent = pCurrent->next;
     }
     return NULL;

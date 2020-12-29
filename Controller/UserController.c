@@ -1,6 +1,7 @@
 //
 // Created by muzhou on 2020/12/20.
 //
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "UserController.h"
@@ -8,7 +9,7 @@
 LinkListPtr Users;
 UserPtr loggedUser;
 
-UserModel* newUser(u8 uid, const wchar_t* username, const wchar_t* password){
+UserModel* newUser(u8 uid, const wchar_t username[16], const wchar_t password[16]){
     UserModel* Obj = NULL;
     if(wcslen(username) > 16 || wcslen(password) > 16) return Obj;
     Obj = (UserModel*)malloc(sizeof(UserModel));
@@ -33,9 +34,11 @@ bool login_callback(void* _data, void* _username){
 }
 
 StatusPtr login(wchar_t username[16], wchar_t password[16]){
+    if(logged())
+        return newStatus(FAILED, L"logged in");
     if(username == NULL || password == NULL)
         return newStatus(NULLPTR, L"");
-    UserPtr res = LinkList_Find(Users, login_callback, username);
+    UserPtr res = searchUser(username);
     if(res == NULL)
         return newStatus(FAILED, L"unknown user");
     if(wcscmp(res->password, password) != 0)
@@ -49,6 +52,8 @@ bool logged() {
 }
 
 StatusPtr logout(){
+    if(!logged())
+        return newStatus(FAILED, L"not logged");
     loggedUser = NULL;
     return newStatus(SUCCESS, L"");
 }
@@ -58,6 +63,8 @@ StatusPtr addUser(wchar_t username[16], wchar_t password[16]){
         return newStatus(FAILED, L"user logged");
     if(searchUser(username) != NULL)
         return newStatus(FAILED, L"user exist");
+    if(wcslen(username) == 0 || wcslen(password) == 0)
+        return newStatus(FAILED, L"username or password too short");
     u32 userNumber = LinkList_Size(Users);
     return LinkList_Insert(Users, userNumber, newUser(userNumber, username, password));
 }
@@ -81,18 +88,21 @@ bool searchUser_callback(void* _data, void* _username){
         return false;
     UserPtr data = _data;
     wchar_t* username = _username;
-    return wcscmp(data->username, username);
+    return wcscmp(data->username, username) == 0;
 }
 
 UserPtr searchUser(wchar_t* username){
     if(username == NULL)
         return NULL;
-    return LinkList_Find(Users, searchUser_callback, username);
+    LinkListNodePtr res = LinkList_Find(Users, searchUser_callback, username);
+    return res == NULL ? NULL : res->data;
 }
 
 StatusPtr editUser(wchar_t* username, wchar_t* password){
     if(username == NULL || password == NULL)
         return newStatus(NULLPTR, L"");
+    if(wcslen(username) == 0 || wcslen(password) == 0)
+        return newStatus(FAILED, L"username or password too short");
     wcscpy(loggedUser->username, username);
     wcscpy(loggedUser->password, password);
     return newStatus(SUCCESS, L"");

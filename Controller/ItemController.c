@@ -35,7 +35,7 @@ StatusPtr removeItem(u32 iid){
     return LinkList_Remove(Items, removeItem_callback, &iid);
 }
 
-bool searchItemByContent_callback(void* _data, void* _content){
+bool searchItem_callback(void* _data, void* _content){
     if(_data == NULL || _content == NULL)
         return false;
     ItemPtr data = _data;
@@ -47,10 +47,18 @@ bool searchItemByContent_callback(void* _data, void* _content){
     return false;
 }
 
-ItemPtr searchItemByContent(wchar_t* content){
+LinkListNodePtr lastSearchResult = NULL;
+ItemPtr searchItem(wchar_t* content) {
     if(content == NULL)
         return NULL;
-    return LinkList_Find(Items, searchItemByContent_callback, content);
+    lastSearchResult = LinkList_Find(Items, searchItem_callback, content);
+    return lastSearchResult == NULL ? NULL : lastSearchResult->data;
+}
+ItemPtr searchNextItem(wchar_t* content) {
+    if(content == NULL || lastSearchResult == NULL)
+        return NULL;
+    lastSearchResult = LinkList_FindNext(lastSearchResult, searchItem_callback, content);
+    return lastSearchResult == NULL ? NULL : lastSearchResult->data;
 }
 
 bool searchItemById_callback(void* _data, void* _iid){

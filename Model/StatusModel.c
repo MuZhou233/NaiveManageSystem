@@ -8,7 +8,7 @@
 StatusPtr newStatus(STAT stat, wchar_t* msg){
     StatusPtr ret =  malloc(sizeof(StatusModel));
     ret->stat = stat;
-    ret->msg = (wchar_t*)malloc(wcslen(msg));
+    ret->msg = (wchar_t*)malloc((wcslen(msg) + 1) * sizeof(wchar_t));
     wcscpy(ret->msg, msg);
     return ret;
 }
