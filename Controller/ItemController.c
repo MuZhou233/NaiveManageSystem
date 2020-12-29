@@ -14,12 +14,12 @@ StatusPtr initItemController(){
    return newStatus(SUCCESS, L"");
 }
 
-StatusPtr addItem(wchar_t items[6][16]){
+StatusPtr addItem(wchar_t data[6][16]){
     if(!logged())
         return newStatus(FAILED, L"user not logged");
     ItemPtr item = malloc(sizeof(ItemModel));
     item->Iid = Items->size+1;
-    memcpy(item->data, items, sizeof(wchar_t)*6*16);
+    memcpy(item->data, data, sizeof(wchar_t)*6*16);
     return LinkList_Insert(Items, Items->size, item);
 }
 
@@ -31,31 +31,47 @@ bool removeItem_callback(void* _data, void* _uid){
     return data->uid == *uid;
 }
 
-StatusPtr removeUser(u16 uid){
-    if(loggedUser == NULL || loggedUser->uid != uid)
-        return newStatus(NULLPTR, L"");
-    return LinkList_Remove(Users, removeUser_callback, &uid);
+StatusPtr removeItem(u32 iid){
+    return LinkList_Remove(Items, removeItem_callback, &iid);
 }
 
-bool searchUser_callback(void* _data, void* _username){
-    if(_data == NULL || _username == NULL)
+bool searchItemByContent_callback(void* _data, void* _content){
+    if(_data == NULL || _content == NULL)
         return false;
-    UserPtr data = _data;
-    wchar_t* username = _username;
-    return wcscmp(data->username, username);
+    ItemPtr data = _data;
+    wchar_t* content = _content;
+    for(int i = 0; i < 6; i++){
+        if(wcsstr(data->data[i], content) != NULL)
+            return true;
+    }
+    return false;
 }
 
-UserPtr searchUser(wchar_t* username){
-    if(username == NULL)
+ItemPtr searchItemByContent(wchar_t* content){
+    if(content == NULL)
         return NULL;
-    return LinkList_Find(Users, searchUser_callback, username);
+    return LinkList_Find(Items, searchItemByContent_callback, content);
 }
 
-StatusPtr editUser(wchar_t* username, wchar_t* password){
-    if(username == NULL || password == NULL)
+bool searchItemById_callback(void* _data, void* _iid){
+    if(_data == NULL || _iid == NULL)
+        return false;
+    ItemPtr data = _data;
+    u32* iid = _iid;
+    return data->Iid == *iid;
+}
+
+ItemPtr searchItemById(u32 iid){
+    return LinkList_Find(Items, searchItemById_callback, &iid);
+}
+
+StatusPtr editItem(u32 iid, wchar_t* data){
+    if(data == NULL)
         return newStatus(NULLPTR, L"");
-    wcscpy(loggedUser->username, username);
-    wcscpy(loggedUser->password, password);
+    ItemPtr item = searchItemById(iid);
+    if(item == NULL)
+        return newStatus(FAILED, L"item not found");
+    memcpy(item->data, data, sizeof(wchar_t)*6*16);
     return newStatus(SUCCESS, L"");
 }
 

@@ -11,9 +11,9 @@
 
 StatusPtr initItemController();
 StatusPtr addItem(wchar_t[6][16]);
-StatusPtr removeItem(u16);
+StatusPtr removeItem(u32);
 StatusPtr searchItem(wchar_t*);
-StatusPtr editItem(u16, wchar_t[6][16]);
+StatusPtr editItem(u32 iid, wchar_t* data);
 LinkListPtr getItemRaw();
 
 #endif //KECHENGSHEJI_ITEMCONTROLLER_H
