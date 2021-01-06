@@ -13,7 +13,8 @@ StatusPtr initItemController();
 StatusPtr addItem(wchar_t[6][16]);
 StatusPtr removeItem(u32);
 ItemPtr searchItem(wchar_t*);
-ItemPtr searchNextItem();
+ItemPtr searchNextItem(wchar_t*);
+ItemPtr searchItemById(u32);
 StatusPtr editItem(u32 iid, wchar_t* data);
 LinkListPtr getItemRaw();
 

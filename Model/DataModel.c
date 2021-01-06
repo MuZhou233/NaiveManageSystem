@@ -72,10 +72,10 @@ int LinkList_Size(LinkList* list)
 void* LinkList_Find(LinkList *list, LinkList_Callback func, void* params)
 {
     if (list == NULL)
-        return newStatus(NULLPTR, L"");
+        return NULL;
 
     // 遍历查找
-    LinkListNode* pCurrent = list->head;
+    LinkListNode* pCurrent = list->head->next;
     while (pCurrent)
     {
         if (func(pCurrent->data, params))
@@ -87,14 +87,14 @@ void* LinkList_Find(LinkList *list, LinkList_Callback func, void* params)
 
 void* LinkList_FindNext(LinkListNode *pCurrent, LinkList_Callback func, void* params){
     if (pCurrent == NULL)
-        return newStatus(NULLPTR, L"");
+        return NULL;
 
     pCurrent = pCurrent->next;
     // 遍历查找
-    while (pCurrent)
+    while (pCurrent != NULL)
     {
         if (func(pCurrent->data, params))
-            return pCurrent->data;
+            return pCurrent;
         pCurrent = pCurrent->next;
     }
     return NULL;

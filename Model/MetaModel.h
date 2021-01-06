@@ -12,16 +12,11 @@ typedef union {
     struct {
         u8 userNumber;
         u32 itemNumber;
-        struct _ItemMeta {
-            wchar_t* p1;
-            wchar_t* p2;
-            wchar_t* p3;
-            wchar_t* p4;
-            wchar_t* p5;
-            wchar_t* p6;
-        } ItemMeta ;
+        wchar_t itemMeta[6][8];
     };
     char raw[0];
 } MetaModel, *MetaPtr;
+
+MetaPtr newMeta(u8, u32);
 
 #endif //KECHENGSHEJI_METAMODEL_H

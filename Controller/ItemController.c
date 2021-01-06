@@ -41,10 +41,11 @@ bool searchItem_callback(void* _data, void* _content){
     ItemPtr data = _data;
     wchar_t* content = _content;
     for(int i = 0; i < 6; i++){
-        if(wcsstr(data->data[i], content) != NULL)
-            return true;
+        if(wcslen(content+16*i) != 0 )
+            if(wcsstr(data->data[i], content+16*i) == NULL)
+            return false;
     }
-    return false;
+    return true;
 }
 
 LinkListNodePtr lastSearchResult = NULL;
@@ -70,7 +71,8 @@ bool searchItemById_callback(void* _data, void* _iid){
 }
 
 ItemPtr searchItemById(u32 iid){
-    return LinkList_Find(Items, searchItemById_callback, &iid);
+    LinkListNodePtr res = LinkList_Find(Items, searchItemById_callback, &iid);
+    return res == NULL ? NULL : res->data;
 }
 
 StatusPtr editItem(u32 iid, wchar_t* data){
